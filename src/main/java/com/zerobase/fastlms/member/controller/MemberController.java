@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 
 import javax.persistence.EntityManager;
+import javax.servlet.http.HttpServletRequest;
 import java.time.LocalDateTime;
 
 @Controller
@@ -36,5 +37,17 @@ public class MemberController {
         model.addAttribute("result", result);
 
         return "member/register_complate";
+    }
+
+    @GetMapping("/member/email-auth")
+    public String emailAuth(Model model, HttpServletRequest request){
+
+        // 쿼리스트링 주소에 파라멘터 값으로 넘기는 값의 이름이 id
+        String uuid = request.getParameter("id");
+
+        boolean result = memberService.emailAuth(uuid);
+        model.addAttribute("result", result);
+
+        return "member/email_auth";
     }
 }

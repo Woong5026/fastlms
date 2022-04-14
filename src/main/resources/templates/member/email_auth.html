@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>회원활성화</title>
+</head>
+<body>
+
+<div th:if="${result eq true}">
+    <h1>회원 계정활성화 완료!</h1>
+</div>
+
+<div th:if="${result eq false}">
+    <h1>회원 계정활성화 실패하였습니다</h1>
+</div>
+
+
+</body>
+</html>

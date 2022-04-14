@@ -29,16 +29,16 @@ public class MemberServiceImpl implements MemberService{
 
         String uuid = UUID.randomUUID().toString();
 
-        Member member = new Member();
-        member.setUserId(requestDto.getUserId());
-        member.setUserName(requestDto.getUserName());
-        member.setPhone(requestDto.getPhone());
-        member.setPassword(requestDto.getPassword());
-        member.setRegDt(LocalDateTime.now());
 
-        // 처음에는 인증하지 않았으니 false
-        member.setEmailAuthYn(false);
-        member.setEmailAuthKey(uuid);
+        Member member = Member.builder()
+                .userId(requestDto.getUserId())
+                .userName(requestDto.getUserName())
+                .phone(requestDto.getPhone())
+                .password(requestDto.getPassword())
+                .regDt(LocalDateTime.now())
+                .emailAuthYn(false)
+                .emailAuthKey(uuid)
+                .build();
 
         memberRepository.save(member);
 
@@ -48,6 +48,26 @@ public class MemberServiceImpl implements MemberService{
                 "<div><a href='http://localhost:8080/member/email-auth?id="+uuid+"'>회원가입</a></div>";
 
         mailComponents.sendMail(email, subject,text);
+
+        return true;
+    }
+
+    @Override
+    public boolean emailAuth(String uuid) {
+
+        // uuid를 찾아오는 작업
+        Optional<Member> findMember = memberRepository.findByEmailAuthKey(uuid);
+
+        // emailAuthKey가 없다면 false를 반환하고 있다면 member정보를 가져온다
+        // 이메일 인증한 날짜도 인증하는 date 필드도 검증
+        if(!findMember.isPresent()){
+            return false;
+        }
+
+        Member member = findMember.get();
+        member.setEmailAuthYn(true);
+        member.setEmailAuthDt(LocalDateTime.now());
+        memberRepository.save(member);
 
         return true;
     }
