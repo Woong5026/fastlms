@@ -1,4 +1,4 @@
-package com.zerobase.fastlms;
+package com.zerobase.fastlms.main_controller;
 
 import com.zerobase.fastlms.component.MailComponents;
 import lombok.RequiredArgsConstructor;
@@ -15,11 +15,11 @@ public class MainContoller {
     @RequestMapping("/")
     public String index(){
 
-        String email = "ktw5026@naver.com";
-        String subject = "인텔리제이로부터";
-        String text = "잘 갔지?";
-
-        mailComponents.sendMail(email,subject,text);
+//        String email = "ktw5026@naver.com";
+//        String subject = "인텔리제이로부터";
+//        String text = "잘 갔지?";
+//
+//        mailComponents.sendMail(email,subject,text);
 
         return "index";
     }
