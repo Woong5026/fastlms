@@ -4,6 +4,7 @@ import com.zerobase.fastlms.component.MailComponents;
 import com.zerobase.fastlms.member.entity.Member;
 import com.zerobase.fastlms.member.exception.MemberNotEmailAuthException;
 import com.zerobase.fastlms.member.model.MemberRequestDto;
+import com.zerobase.fastlms.member.model.ResetPasswordRequestDto;
 import com.zerobase.fastlms.member.repository.MemberRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.GrantedAuthority;
@@ -79,6 +80,88 @@ public class MemberServiceImpl implements MemberService{
         member.setEmailAuthYn(true);
         member.setEmailAuthDt(LocalDateTime.now());
         memberRepository.save(member);
+
+        return true;
+    }
+
+    @Override
+    public boolean sendResetPassword(ResetPasswordRequestDto requestDto) {
+
+        // 일치하는 정보를 찾기 위해 회원정보를 먼저 찾는다
+        Optional<Member> optionalMember = memberRepository
+                .findByUserIdAndUserName(requestDto.getUserId(), requestDto.getUserName());
+        if(!optionalMember.isPresent()){
+            throw new UsernameNotFoundException("회원정보가 존재하지 않습니다");
+        }
+        Member member = optionalMember.get();
+
+        String uuid = UUID.randomUUID().toString();
+
+        member.setResetPasswordKey(uuid);
+        // 초기화는 하루정도면 충분하기에 아래와 같이 설정정
+       member.setResetPasswordLimitDt(LocalDateTime.now().plusDays(1));
+       memberRepository.save(member);
+
+        // 메일은 사용자가 받은 메일에서 링크를 타고 오면
+        // 사이트에서 그 사람의 id, password를 입력해서 값이 맞으면 그 값으로 초기화하는 작업을 하기에
+        // 해당 사용자만 아는 값을 보내줘야 한다
+        String email = requestDto.getUserId();
+        String subject = "비밀번호 초기화 메일입니다";
+        String text = "<p>아래의 링크를 출력해 비밀번호를 초기화하세요</p>" +
+                "<div><a href='http://localhost:8080/member/reset/password?id="+uuid+"'>비밀번호 초기화 링크</a></div>";
+
+        mailComponents.sendMail(email, subject,text);
+
+        return true;
+    }
+
+    @Override
+    public boolean resetPassword(String uuid, String password) {
+
+        Optional<Member> optionalMember = memberRepository.findByResetPasswordKey(uuid);
+        if(!optionalMember.isPresent()){
+            throw new UsernameNotFoundException("회원정보가 존재하지 않습니다");
+        }
+        Member member = optionalMember.get();
+
+        // 초기화 날짜가 유효한지 확인
+        // 아래 두가지 조건문을 만족해야지 값이 들어간다
+        if(member.getResetPasswordLimitDt() == null){
+            throw new RuntimeException("유효한 날짜가 아닙니다");
+        }
+
+        if(member.getResetPasswordLimitDt().isBefore(LocalDateTime.now())){
+            throw new RuntimeException("유효한 날짜가 아닙니다");
+        }
+
+
+        String encPassword = BCrypt.hashpw(password, BCrypt.gensalt());
+        member.setPassword(encPassword);
+        // 초기화할때 패스워드만 초기화하는 것이 아니라 아래 값도 초기화해야함
+        member.setResetPasswordKey("");
+        member.setResetPasswordLimitDt(null);
+        memberRepository.save(member);
+
+        return true;
+    }
+
+    @Override
+    public boolean checkResetPassword(String uuid) {
+        Optional<Member> optionalMember = memberRepository.findByResetPasswordKey(uuid);
+        if(!optionalMember.isPresent()){
+            return false;
+        }
+        Member member = optionalMember.get();
+
+        // 초기화 날짜가 유효한지 확인
+        // 아래 두가지 조건문을 만족해야지 값이 들어간다
+        if(member.getResetPasswordLimitDt() == null){
+            throw new RuntimeException("유효한 날짜가 아닙니다");
+        }
+
+        if(member.getResetPasswordLimitDt().isBefore(LocalDateTime.now())){
+            throw new RuntimeException("유효한 날짜가 아닙니다");
+        }
 
         return true;
     }
