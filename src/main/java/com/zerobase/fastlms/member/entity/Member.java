@@ -29,6 +29,10 @@ public class Member {
     // 이 날짜보다 값이 크면 초기화할 수 없다
     private LocalDateTime resetPasswordLimitDt;
 
+    // 관리자여부를 지정할건지 or 회원에 따른 role(준회원,정회원,관리자 등)을 지정할 것이냐
+    // 일단 사용자가 관리자인지 아닌지 판단할 거임
+    private boolean adminYn;
+
 
     public Member(String userId, String userName, String phone, String password, LocalDateTime regDt) {
         this.userId = userId;

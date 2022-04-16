@@ -77,6 +77,12 @@ public class MemberServiceImpl implements MemberService{
         }
 
         Member member = findMember.get();
+
+        // 이미 이메일이 활성화되었을 때 활성화가 안되게 하는 로직
+        if(member.isEmailAuthYn()){
+            return false;
+        }
+
         member.setEmailAuthYn(true);
         member.setEmailAuthDt(LocalDateTime.now());
         memberRepository.save(member);
@@ -184,6 +190,11 @@ public class MemberServiceImpl implements MemberService{
         // return 객체의 파라미터가 이름, 비밀번호 , role인데 role은 직접 설정해야함
         List<GrantedAuthority> grantedAuthorities = new ArrayList<>();
         grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_USER"));
+
+        // 유저과 관리자일때 관리자 역할 부여
+        if(member.isAdminYn()){
+            grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
+        }
 
         return new User(member.getUserName(), member.getPassword(),grantedAuthorities);
     }

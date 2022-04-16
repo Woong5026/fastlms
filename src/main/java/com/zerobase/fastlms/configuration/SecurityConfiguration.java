@@ -51,7 +51,15 @@ public class SecurityConfiguration extends WebSecurityConfigurerAdapter {
                     )
                         .permitAll(); // 지정한 권한을 모두 허용하겠다
 
-        http.formLogin() // 로그인 관련설정
+        http.authorizeRequests()
+                        .antMatchers("/admin/**")
+                        .hasAuthority("ROLE_ADMIN");
+
+        // 권한에 대한 예외처리
+        http.exceptionHandling()
+                        .accessDeniedPage("/error/denied");
+
+       http.formLogin() // 로그인 관련설정
                 .loginPage("/member/login")
                 .failureHandler(getFailureHandeler()) // 로그인 실패시 처리하는 곳
                 .permitAll();
