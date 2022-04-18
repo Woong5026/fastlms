@@ -2,7 +2,6 @@ package com.zerobase.fastlms.member.service;
 
 import com.zerobase.fastlms.admin.dto.MemberDto;
 import com.zerobase.fastlms.admin.model.MemberParam;
-import com.zerobase.fastlms.member.entity.Member;
 import com.zerobase.fastlms.member.model.MemberRequestDto;
 import com.zerobase.fastlms.member.model.ResetPasswordRequestDto;
 import org.springframework.security.core.userdetails.UserDetailsService;

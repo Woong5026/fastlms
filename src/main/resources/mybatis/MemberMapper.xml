@@ -5,6 +5,40 @@
 <mapper namespace="com.zerobase.fastlms.admin.mapper.MemberMapper">
 
 
+    <select id="selectListCount"
+            parameterType="com.zerobase.fastlms.admin.model.MemberParam"
+
+
+            resultType="long">
+
+        select count(*) from member
+        where 1 = 1
+        <if test="searchType != null and searchValue != null">
+            <choose>
+                <when test="searchType == 'userId'">
+                    and user_id like concat('%', #{searchValue} , '%')
+                </when>
+                <when test="searchType == 'userName'">
+                    and user_name like concat('%', #{searchValue} , '%')
+                </when>
+                <when test="searchType == 'phone'">
+                    and phone like concat('%', #{searchValue} , '%')
+                </when>
+                <otherwise>
+                    and
+                    (
+                    user_id like concat('%', #{searchValue} , '%')
+                    or
+                    user_name like concat('%', #{searchValue} , '%')
+                    or
+                    phone like concat('%', #{searchValue} , '%')
+                    )
+                </otherwise>
+            </choose>
+        </if>
+    </select>
+
+
     <select id="selectList"
             parameterType="com.zerobase.fastlms.admin.model.MemberParam"
             resultType="com.zerobase.fastlms.admin.dto.MemberDto">
@@ -34,6 +68,6 @@
                 </otherwise>
             </choose>
         </if>
-        limit 0,5
+        limit #{pageStart}, #{pageEnd}
     </select>
 </mapper>
