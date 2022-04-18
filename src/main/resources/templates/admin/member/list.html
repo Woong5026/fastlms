@@ -8,7 +8,7 @@
             width: 100%;
             border-collapse: collapse;
         }
-        .list table th, list table td{
+        .list table th, .list table td{
             border: solid 1px #000;
         }
         .search-form{
@@ -91,7 +91,11 @@
             <tbody>
             <tr th:each="x : ${list}">
                 <td th:text="${x.seq}">1</td>
-                <td th:text="${x.userId}">ktw5026@naver.com</td>
+                <td>
+                    <a th:text="${x.userId}"
+                       th:href="${'detail?userId=' + x.userId}">
+                        ktw5026@naver.com</a>
+                </td>
                 <td th:text="${x.userName}">홍길동</td>
                 <td th:text="${x.phone}">010-1111-1111</td>
                 <td>

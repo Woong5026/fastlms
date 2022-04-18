@@ -11,6 +11,8 @@ public class MemberParam {
     String searchType;
     String searchValue;
 
+    String userId;
+
 
     // pageIndex = 1 , 0 // pageIndex = 2 ,10 ...
     public long getPageStart(){
