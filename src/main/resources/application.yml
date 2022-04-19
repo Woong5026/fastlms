@@ -22,9 +22,9 @@ spring:
           starttls:
             enable: true
 
-logging:
-  level:
-    root: debug
+#logging:
+#  level:
+#    root: debug
 
 mybatis:
   mapper-locations: mybatis/**/*.xml

@@ -5,7 +5,9 @@ import com.zerobase.fastlms.admin.mapper.MemberMapper;
 import com.zerobase.fastlms.admin.model.MemberParam;
 import com.zerobase.fastlms.component.MailComponents;
 import com.zerobase.fastlms.member.entity.Member;
+import com.zerobase.fastlms.member.entity.MemberCode;
 import com.zerobase.fastlms.member.exception.MemberNotEmailAuthException;
+import com.zerobase.fastlms.member.exception.MemberStopUserlAuthException;
 import com.zerobase.fastlms.member.model.MemberRequestDto;
 import com.zerobase.fastlms.member.model.ResetPasswordRequestDto;
 import com.zerobase.fastlms.member.repository.MemberRepository;
@@ -55,6 +57,7 @@ public class MemberServiceImpl implements MemberService{
                 .regDt(LocalDateTime.now())
                 .emailAuthYn(false)
                 .emailAuthKey(uuid)
+                .userStatus(Member.MEMBER_STATUS_REQ)
                 .build();
 
         memberRepository.save(member);
@@ -88,6 +91,7 @@ public class MemberServiceImpl implements MemberService{
             return false;
         }
 
+        member.setUserStatus(Member.MEMBER_STATUS_ING);
         member.setEmailAuthYn(true);
         member.setEmailAuthDt(LocalDateTime.now());
         memberRepository.save(member);
@@ -194,7 +198,6 @@ public class MemberServiceImpl implements MemberService{
             }
         }
 
-
         return list;
 
     }
@@ -212,6 +215,39 @@ public class MemberServiceImpl implements MemberService{
     }
 
     @Override
+    public boolean updateStatus(String userId, String userStatus) {
+
+        Optional<Member> optionalMember = memberRepository.findById(userId);
+        if(!optionalMember.isPresent()){
+            throw new UsernameNotFoundException("회원정보가 존재하지 않습니다");
+        }
+        Member member = optionalMember.get();
+
+        member.setUserStatus(userStatus);
+        memberRepository.save(member);
+
+        return true;
+
+    }
+
+    @Override
+    public boolean updatePassword(String userId, String password) {
+        Optional<Member> optionalMember = memberRepository.findById(userId);
+        if(!optionalMember.isPresent()){
+            throw new UsernameNotFoundException("회원정보가 존재하지 않습니다");
+        }
+        Member member = optionalMember.get();
+
+        String encPassword = BCrypt.hashpw(password, BCrypt.gensalt());
+        member.setPassword(encPassword);
+
+        member.setPassword(encPassword);
+        memberRepository.save(member);
+
+        return true;
+    }
+
+    @Override
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
         Optional<Member> optionalMember = memberRepository.findById(username);
@@ -222,8 +258,12 @@ public class MemberServiceImpl implements MemberService{
 
         // 이메일 인증절차에 관한 로직
         // true가 아닐때 예외처리
-        if(!member.isEmailAuthYn()){
+        if(Member.MEMBER_STATUS_REQ.equals(member.getUserStatus())){
             throw new MemberNotEmailAuthException("이메일 활성화 이후에 로그인 진행해주세요");
+        }
+
+        if(Member.MEMBER_STATUS_STOP.equals(member.getUserStatus())){
+            throw new MemberStopUserlAuthException("정지된 회원입니다");
         }
 
         // return 객체의 파라미터가 이름, 비밀번호 , role인데 role은 직접 설정해야함

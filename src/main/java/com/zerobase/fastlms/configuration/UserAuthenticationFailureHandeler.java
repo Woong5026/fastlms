@@ -25,7 +25,7 @@ public class UserAuthenticationFailureHandeler extends SimpleUrlAuthenticationFa
         // 에러가 발생했으니 request에 에러 메세지를 넣을 거임
         setUseForward(true);
         setDefaultFailureUrl("/member/login?error=true");
-        request.setAttribute("errorMessage", "로그인 실패!");
+        request.setAttribute("errorMessage", msg);
 
 
         super.onAuthenticationFailure(request, response, exception);

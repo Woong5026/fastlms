@@ -28,10 +28,10 @@ public class MemberDto {
     LocalDateTime resetPasswordLimitDt;
 
     boolean adminYn;
+    String userStatus;
 
     // 페이징 카운트트
    long totalCount;
-
    long seq;
 
     public static MemberDto of(Member member){
@@ -47,7 +47,7 @@ public class MemberDto {
                 .restPasswordKey(member.getResetPasswordKey())
                 .resetPasswordLimitDt(member.getResetPasswordLimitDt())
                 .adminYn(member.isAdminYn())
-
+                .userStatus(member.getUserStatus())
                 .build();
     }
 }

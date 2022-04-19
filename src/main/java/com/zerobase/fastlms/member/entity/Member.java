@@ -11,7 +11,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
-public class Member {
+public class Member implements MemberCode{
 
     @Id
     private String userId;
@@ -32,6 +32,9 @@ public class Member {
     // 관리자여부를 지정할건지 or 회원에 따른 role(준회원,정회원,관리자 등)을 지정할 것이냐
     // 일단 사용자가 관리자인지 아닌지 판단할 거임
     private boolean adminYn;
+
+    // 이용가능한 상태 , 정지상태태
+   private String userStatus;
 
 
     public Member(String userId, String userName, String phone, String password, LocalDateTime regDt) {
