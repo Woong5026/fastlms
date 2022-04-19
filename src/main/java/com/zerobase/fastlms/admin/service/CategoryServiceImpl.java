@@ -4,10 +4,12 @@ import com.zerobase.fastlms.admin.entity.Category;
 import com.zerobase.fastlms.admin.model.CategoryDto;
 import com.zerobase.fastlms.admin.repository.CategoryRepository;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 @AllArgsConstructor
@@ -15,13 +17,17 @@ public class CategoryServiceImpl implements CategoryService{
 
     private final CategoryRepository categoryRepository;
 
+    private Sort getSortBySortValueDesc(){
+        return Sort.by(Sort.Direction.DESC, "sortValue");
+    }
+
 
     @Override
     public List<CategoryDto> list() {
 
-        List<Category> categoryList = categoryRepository.findAll();
+        List<Category> optionalCategories = categoryRepository.findAll(getSortBySortValueDesc());
 
-        return CategoryDto.bof(categoryList);
+        return CategoryDto.bof(optionalCategories);
     }
 
     @Override
@@ -40,12 +46,27 @@ public class CategoryServiceImpl implements CategoryService{
 
     @Override
     public boolean update(CategoryDto param) {
-        return false;
+
+        Optional<Category> optionalCategory = categoryRepository.findById(param.getId());
+        if(optionalCategory.isPresent()){
+
+            Category category = optionalCategory.get();
+            category.setCategoryName(param.getCategoryName());
+            category.setSortValue(param.getSortValue());
+            category.setUsingYn(param.isUsingYn());
+            categoryRepository.save(category);
+
+        }
+
+        return true;
     }
 
 
     @Override
     public boolean del(long id) {
-        return false;
+
+        categoryRepository.deleteById(id);
+
+        return true;
     }
 }
