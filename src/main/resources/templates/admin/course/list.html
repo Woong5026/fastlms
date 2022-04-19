@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <style>
+        .list table{
+            width: 100%;
+            border-collapse: collapse;
+        }
+        .list table th, .list table td{
+            border: solid 1px #000;
+        }
+
+    </style>
+
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
+
+</head>
+<body>
+    <h1>강좌관리</h1>
+
+    <div th:replace="/fragments/layout.html :: fragment-admin-body-menu"></div>
+
+    <div>
+        <a href="/admin/course/add">강좌 등록</a>
+    </div>
+
+    <div class="list">
+        <table>
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>카테고리명</th>
+                    <th>순서</th>
+                    <th>사용여부</th>
+                    <th>비고</th>
+                </tr>
+            </thead>
+        </table>
+        </div>
+
+</body>
+</html>

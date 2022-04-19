@@ -4,6 +4,7 @@ import com.zerobase.fastlms.admin.dto.MemberDto;
 import com.zerobase.fastlms.admin.model.MemberParam;
 import com.zerobase.fastlms.admin.model.MemberPasswordDto;
 import com.zerobase.fastlms.admin.model.MemberStatusDto;
+import com.zerobase.fastlms.course.contoller.BaseController;
 import com.zerobase.fastlms.member.service.MemberService;
 import com.zerobase.fastlms.utils.PageUtil;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +17,7 @@ import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
-public class AdminMemberController {
+public class AdminMemberController extends BaseController {
 
     private final MemberService memberService;
 
@@ -26,7 +27,6 @@ public class AdminMemberController {
         param.init();
 
         List<MemberDto> members = memberService.list(param);
-        model.addAttribute("list", members);
 
         long totalCount = 0;
         if(members != null && members.size() > 0){
@@ -34,10 +34,10 @@ public class AdminMemberController {
         }
 
         String queryString = param.getQueryString();
+        String pagerHtml = getPapaerHtml(totalCount, param.getPageSize(), param.getPageIndex(), queryString);
 
-        PageUtil pageUtil = new PageUtil(totalCount, param.getPageSize(), param.getPageIndex(), queryString);
-        model.addAttribute("pager", pageUtil.pager());
-
+        model.addAttribute("list", members);
+        model.addAttribute("pager", pagerHtml);
         model.addAttribute("totalCount", totalCount);
 
 
