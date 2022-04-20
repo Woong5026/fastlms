@@ -11,6 +11,14 @@
         .list table th, .list table td{
             border: solid 1px #000;
         }
+        .pager{
+            margin-top: 20px;
+            text-align: center;
+        }
+        .pager a.on{
+            font-weight: bold;
+            color: red;
+        }
 
     </style>
 
@@ -31,13 +39,29 @@
             <thead>
                 <tr>
                     <th>ID</th>
-                    <th>카테고리명</th>
-                    <th>순서</th>
-                    <th>사용여부</th>
-                    <th>비고</th>
+                    <th>강좌명</th>
+                    <th>등록일</th>
+
                 </tr>
             </thead>
+            <tbody>
+            <tr th:each="x : ${list}">
+                <td th:text="${x.seq}">1</td>
+                <td>
+                    <p th:text="${x.subject}"></p>
+                </td>
+                <td>
+                    <p th:text="${x.regDt}">2021.02.02</p>
+                </td>
+
+            </tr>
+
+            </tbody>
         </table>
+
+        <div class="pager" th:utext="${pager}">
+
+        </div>
         </div>
 
 </body>
