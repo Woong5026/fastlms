@@ -1,11 +1,19 @@
 package com.zerobase.fastlms.course.model;
 
+import com.zerobase.fastlms.course.entity.Course;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.Date;
 
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class CourseDto {
 
     Long id;
@@ -17,11 +25,27 @@ public class CourseDto {
     String contents;
     long price;
     long salePrice;
-    Date saleEndDt;
+    LocalDate saleEndDt;
     LocalDateTime regDt;//등록일(추가날짜)
     LocalDateTime udtDt;//수정일(수정날짜)
 
     // 페이징 카운트트
     long totalCount;
     long seq;
+
+    public static CourseDto of(Course course) {
+        return CourseDto.builder()
+                .id(course.getId())
+                .categoryId(course.getCategoryId())
+                .imagePath(course.getImagePath())
+                .keyword(course.getKeyword())
+                .subject(course.getSubject())
+                .summary(course.getSummary())
+                .contents(course.getContents())
+                .price(course.getPrice())
+                .salePrice(course.getSalePrice())
+                .saleEndDt(course.getSaleEndDt())
+                .regDt(course.getRegDt())
+                .build();
+    }
 }

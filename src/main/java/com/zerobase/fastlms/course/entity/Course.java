@@ -36,5 +36,5 @@ public class Course {
     LocalDate saleEndDt;
 
     LocalDateTime regDt;
-    LocalDateTime updateDt;
+    LocalDateTime udtDt;//수정일(수정날짜);
 }
