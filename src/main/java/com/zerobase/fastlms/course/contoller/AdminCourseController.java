@@ -105,5 +105,13 @@ public class AdminCourseController extends BaseController{
         return "redirect:/admin/course/list";
     }
 
+    @PostMapping("/admin/course/delete")
+    public String delete(Model model, CourseInput param, HttpServletRequest request){
+
+        boolean result = courseService.del(param.getIdList());
+
+        return "redirect:/admin/course/list";
+    }
+
 
 }
