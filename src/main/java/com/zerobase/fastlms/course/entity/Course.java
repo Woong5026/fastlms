@@ -31,6 +31,7 @@ public class Course {
 
     @Lob
     String contents;
+
     long price;
     long salePrice;
     LocalDate saleEndDt;

@@ -1,6 +1,5 @@
 package com.zerobase.fastlms.course.service;
 
-import com.zerobase.fastlms.admin.model.CategoryDto;
 import com.zerobase.fastlms.course.model.CourseDto;
 import com.zerobase.fastlms.course.model.CourseInput;
 import com.zerobase.fastlms.course.model.CourseParam;
@@ -21,4 +20,7 @@ public interface CourseService {
 
     // 강좌 내용삭제
     boolean del(String idList);
+
+    // 프론트용 강좌 목록
+    List<CourseDto> frontList(CourseParam param);
 }

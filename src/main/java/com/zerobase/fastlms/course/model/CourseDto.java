@@ -8,7 +8,9 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Data
 @Builder
@@ -47,5 +49,18 @@ public class CourseDto {
                 .saleEndDt(course.getSaleEndDt())
                 .regDt(course.getRegDt())
                 .build();
+    }
+
+    public static List<CourseDto> of(List<Course> courses){
+
+        if(courses != null){
+            List<CourseDto> courseDtoList = new ArrayList<>();
+            for (Course x : courses) {
+                // 위에 있는 of 메서드를 호출하고 하나씩 추가한다
+                courseDtoList.add(CourseDto.of(x));
+            }
+            return courseDtoList;
+        }
+        return null;
     }
 }

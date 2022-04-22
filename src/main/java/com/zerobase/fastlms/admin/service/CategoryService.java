@@ -1,6 +1,6 @@
 package com.zerobase.fastlms.admin.service;
 
-import com.zerobase.fastlms.admin.model.CategoryDto;
+import com.zerobase.fastlms.admin.dto.CategoryDto;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -17,4 +17,9 @@ public interface CategoryService {
     boolean update(CategoryDto param);
 
     boolean del(long id);
+
+    // 프론트 카테고리 정보
+    List<CategoryDto> frontList(CategoryDto param);
+
+
 }

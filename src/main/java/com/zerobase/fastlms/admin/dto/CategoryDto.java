@@ -1,4 +1,4 @@
-package com.zerobase.fastlms.admin.model;
+package com.zerobase.fastlms.admin.dto;
 
 import com.zerobase.fastlms.admin.entity.Category;
 import lombok.AllArgsConstructor;
@@ -19,6 +19,9 @@ public class CategoryDto {
     String categoryName;
     int sortValue;
     boolean usingYn;
+
+    // 추가 칼럼
+    int courseCount;
 
     public static List<CategoryDto> bof(List<Category> categories){
 

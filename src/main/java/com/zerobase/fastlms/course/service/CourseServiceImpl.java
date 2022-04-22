@@ -1,7 +1,5 @@
 package com.zerobase.fastlms.course.service;
 
-import com.zerobase.fastlms.admin.dto.MemberDto;
-import com.zerobase.fastlms.admin.model.CategoryDto;
 import com.zerobase.fastlms.course.entity.Course;
 import com.zerobase.fastlms.course.mapper.CourseMapper;
 import com.zerobase.fastlms.course.model.CourseDto;
@@ -9,7 +7,6 @@ import com.zerobase.fastlms.course.model.CourseInput;
 import com.zerobase.fastlms.course.model.CourseParam;
 import com.zerobase.fastlms.course.repository.CourseRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
 
@@ -139,5 +136,26 @@ public class CourseServiceImpl implements CourseService{
         }
 
         return true;
+    }
+
+    @Override
+    public List<CourseDto> frontList(CourseParam param) {
+
+        // 이 경우는 전체니까 전체를 가져오는 값을 넣으면 된다
+        if(param.getCategoryId() < 1){
+            List<Course> courseList = courseRepository.findAll();
+            return CourseDto.of(courseList);
+        }
+
+        Optional<List<Course>> optionalCourses = courseRepository.findByCategoryId(param.getCategoryId());
+
+        if(optionalCourses.isPresent()){
+            return CourseDto.of(optionalCourses.get());
+        }
+
+        return null;
+
+
+
     }
 }
