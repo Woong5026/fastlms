@@ -35,4 +35,15 @@ public class CourseController extends BaseController{
         return "course/index";
     }
 
+    @GetMapping("/course/{id}")
+    public String courseDetail(Model model, CourseParam param){
+
+        CourseDto detail = courseService.frontDetail(param.getId());
+        model.addAttribute("detail", detail);
+
+        return "course/detail";
+    }
+
+
+
 }
