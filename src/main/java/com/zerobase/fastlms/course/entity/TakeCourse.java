@@ -14,7 +14,11 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class TakeCourse {
+public class TakeCourse implements TakeCourseCode{
+
+    public static String STATUS_REQ = "REQ"; // 수강 신청상태
+    public static String STATUS_COM = "COM"; // 결제완료
+    public static String STATUS_CANCEL = "CANCEL"; // 수강취소
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

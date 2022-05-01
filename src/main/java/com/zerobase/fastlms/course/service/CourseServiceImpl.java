@@ -1,11 +1,11 @@
 package com.zerobase.fastlms.course.service;
 
 import com.zerobase.fastlms.course.entity.Course;
+import com.zerobase.fastlms.course.entity.TakeCourse;
 import com.zerobase.fastlms.course.mapper.CourseMapper;
-import com.zerobase.fastlms.course.model.CourseDto;
-import com.zerobase.fastlms.course.model.CourseInput;
-import com.zerobase.fastlms.course.model.CourseParam;
+import com.zerobase.fastlms.course.model.*;
 import com.zerobase.fastlms.course.repository.CourseRepository;
+import com.zerobase.fastlms.course.repository.TakeCourseRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.util.CollectionUtils;
@@ -13,6 +13,7 @@ import org.springframework.util.CollectionUtils;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
+import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 
@@ -22,6 +23,7 @@ public class CourseServiceImpl implements CourseService{
 
     private final CourseRepository courseRepository;
     private final CourseMapper courseMapper;
+    private final TakeCourseRepository takeCourseRepository;
 
     private LocalDate getLocalDate(String value){
         // 문자열을 LocalDate로 바꿀 수 있는지 확인
@@ -168,5 +170,52 @@ public class CourseServiceImpl implements CourseService{
             return CourseDto.of(optionalCourse.get());
         }
         return null;
+    }
+
+    @Override
+    public ServiceResult request(TakeCourseInput param) {
+
+        ServiceResult result = new ServiceResult();
+
+        // 강좌글 id 가져오기
+        Optional<Course> optionalCourse = courseRepository.findById(param.getCourseId());
+        if(!optionalCourse.isPresent()){
+            // 현재 에러는 강좌정보 자체가 없는것
+            result.setResult(false);
+            result.setMessage("강좌정보가 존재하지 않습니다");
+            return result;
+        }
+
+        Course course = optionalCourse.get();
+
+        // 이미 신청한 경우 신청이 안되는 로직
+
+        String[] statusList = {TakeCourse.STATUS_REQ, TakeCourse.STATUS_COM};
+
+        long count = takeCourseRepository.countByCourseIdAndUserIdAndStatusIn(course.getId(),
+                param.getUserId(), Arrays.asList(statusList));
+
+        if (count > 0){
+            // 이미 신청한정보가 있을 때
+            result.setResult(false);
+            result.setMessage("이미 신청한 강좌정보가 있습니다");
+            return result;
+        }
+
+        TakeCourse takeCourse = TakeCourse.builder()
+                .courseId(course.getId())
+                .userId(param.getUserId())
+                .payPrice(course.getSalePrice())
+                .regDt(LocalDateTime.now())
+                .status(TakeCourse.STATUS_REQ)
+                .build();
+
+        takeCourseRepository.save(takeCourse);
+
+
+        // 성공했을 때
+        result.setResult(true);
+        result.setMessage("");
+        return result;
     }
 }

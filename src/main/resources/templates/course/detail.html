@@ -16,15 +16,35 @@
 
                 $('#submitForm').on('submit', function (){
 
+                    if (!confirm("수강신청을 하시겠습니까?")) {
+                        return false;
+                    }
+
                     var $thisForm = $(this);
 
                     var url = '/api/course/req.api';
                     var parameter = {
                         // 아이디 값은 hidden에 있는 thisForm의 id 값
-                        id: $thisForm.find('input[name=id]').val()
+                        courseId : $thisForm.find('input[name=id]').val()
                     };
 
                     axios.post(url, parameter).then(function (response){
+
+                        // data를 초기화시키는 자바스크립트 문법
+                        var msg = response.data || '';
+
+                        // 객체로 초기화
+                       response.data = response.data || {};
+                       response.data.header = response.data.header || {};
+
+                       if(!response.data.header.result){
+                           alert(response.data.header.message);
+                           return false;
+                       }
+
+                       // 정상적 상황
+                       alert('강좌가 정상적으로 신청되었습니다');
+                       location.href = '/';
 
                     }).catch(function (err){
 
