@@ -8,6 +8,7 @@ import com.zerobase.fastlms.course.model.CourseParam;
 import com.zerobase.fastlms.course.model.ServiceResult;
 import com.zerobase.fastlms.course.model.TakeCourseInput;
 import com.zerobase.fastlms.course.service.CourseService;
+import com.zerobase.fastlms.member.entity.Member;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;

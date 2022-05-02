@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zerobase.fastlms.course.mapper.TakeCourseMapper">
+
+<!--    공통인 부분 처리, 중복 쿼리를 줄이기 위해 사용-->
+    <sql id="selectListWhere">
+    </sql>
+
+
+    <select id="selectListCount"
+            parameterType="com.zerobase.fastlms.course.model.TakeCourseParam"
+            resultType="long">
+        select count(*)
+        from take_course
+        where 1 = 1
+            <include refid="selectListWhere" />
+    </select>
+
+
+    <select id="selectList"
+            resultType="com.zerobase.fastlms.course.dto.TakeCourseDto">
+
+        select tc.*
+        , c.subject
+        , m.user_name
+        , m.phone
+        from take_course tc
+            join course c on tc.course_id = c.id
+            join member m on tc.user_id = m.user_id
+        where 1 = 1
+            <include refid="selectListWhere" />
+            order by reg_dt desc
+        limit #{pageStart}, #{pageEnd}
+    </select>
+
+</mapper>

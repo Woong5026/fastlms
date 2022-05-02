@@ -11,12 +11,11 @@
         <script src="https://cdn.jsdelivr.net/npm/axios/dist/axios.min.js"></script>
         <script src="https://code.jquery.com/jquery-3.6.0.min.js" integrity="sha256-/xUj+3OJU5yExlq6GSYGSHk7tPXikynS7ogEvDej/m4=" crossorigin="anonymous"></script>
         <script>
+            $(function() {
 
-            $(function (){
+                $('#submitForm').on('submit', function() {
 
-                $('#submitForm').on('submit', function (){
-
-                    if (!confirm("수강신청을 하시겠습니까?")) {
+                    if (!confirm('수강 신청을 하시겠습니까?')) {
                         return false;
                     }
 
@@ -24,37 +23,33 @@
 
                     var url = '/api/course/req.api';
                     var parameter = {
-                        // 아이디 값은 hidden에 있는 thisForm의 id 값
-                        courseId : $thisForm.find('input[name=id]').val()
+                        courseId: $thisForm.find('input[name=id]').val()
                     };
+                    axios.post(url, parameter).then(function(response) {
+                        console.log(response);
+                        console.log(response.data);
 
-                    axios.post(url, parameter).then(function (response){
+                        response.data = response.data || {};
+                        response.data.header = response.data.header || {};
 
-                        // data를 초기화시키는 자바스크립트 문법
-                        var msg = response.data || '';
+                        if (!response.data.header.result) {
+                            alert(response.data.header.message);
+                            return false;
+                        }
 
-                        // 객체로 초기화
-                       response.data = response.data || {};
-                       response.data.header = response.data.header || {};
+                        //정상적일때
+                        alert(' 강좌가 정상적으로 신청되었습니다. ');
+                        location.href = '/';
 
-                       if(!response.data.header.result){
-                           alert(response.data.header.message);
-                           return false;
-                       }
 
-                       // 정상적 상황
-                       alert('강좌가 정상적으로 신청되었습니다');
-                       location.href = '/';
-
-                    }).catch(function (err){
-
+                    }).catch(function(err) {
+                        console.log(err);
                     });
 
                     return false;
                 });
 
             });
-
         </script>
     </head>
     <body>

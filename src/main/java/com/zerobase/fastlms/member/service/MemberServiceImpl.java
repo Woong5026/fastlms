@@ -275,6 +275,6 @@ public class MemberServiceImpl implements MemberService{
             grantedAuthorities.add(new SimpleGrantedAuthority("ROLE_ADMIN"));
         }
 
-        return new User(member.getUserName(), member.getPassword(),grantedAuthorities);
+        return new User(member.getUserId(), member.getPassword(),grantedAuthorities);
     }
 }
