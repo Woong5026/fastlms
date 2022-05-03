@@ -3,10 +3,7 @@ package com.zerobase.fastlms.course.contoller;
 
 import com.zerobase.fastlms.admin.service.CategoryService;
 import com.zerobase.fastlms.course.dto.TakeCourseDto;
-import com.zerobase.fastlms.course.model.CourseDto;
-import com.zerobase.fastlms.course.model.CourseInput;
-import com.zerobase.fastlms.course.model.CourseParam;
-import com.zerobase.fastlms.course.model.TakeCourseParam;
+import com.zerobase.fastlms.course.model.*;
 import com.zerobase.fastlms.course.service.CourseService;
 import com.zerobase.fastlms.course.service.TakeCourseService;
 import lombok.RequiredArgsConstructor;
@@ -45,6 +42,21 @@ public class AdminTakeCourseController extends BaseController{
         model.addAttribute("totalCount", totalCount);
 
         return "admin/takecourse/list";
+    }
+
+    @PostMapping("/admin/takecourse/status")
+    public String status(Model model, TakeCourseParam param){
+
+        ServiceResult result = takeCourseService.updateStatus(param.getId(), param.getStatus());
+
+        if(!result.isResult()){
+            model.addAttribute("message", result.getMessage());
+            return "common/error";
+        }
+
+
+
+        return "redirect:/admin/takecourse/list";
     }
 
 }

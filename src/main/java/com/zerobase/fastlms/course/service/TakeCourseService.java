@@ -11,5 +11,6 @@ public interface TakeCourseService {
     // 수강목록
     List<TakeCourseDto> list(TakeCourseParam param);
 
-
+    // 수강내용 상태변경
+    ServiceResult updateStatus(long id, String status);
 }

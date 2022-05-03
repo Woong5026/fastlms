@@ -39,6 +39,9 @@
             /*right: 0;*/
             text-align: right;
         }
+        .list .row-buttons{
+            text-align: center;
+        }
 
         .pager {
             margin-top: 20px;
@@ -54,44 +57,26 @@
     <script>
         $(document).ready(function() {
 
-            $('#selectAll').on('click', function() {
+            // 여기서의 button은 수강완료가 될수도 있고 수강취소가 될 수도 있다
+            $('.row-buttons button').on('click', function (){
 
-                var checked = $(this).is(':checked');
+                var status = $(this).val();
+                // this = row-buttons, 상위 div로 올라가서 input의 name이 id인것을 find
+                var id = $(this).closest('div').find('input[name=id]').val();
 
+                var msg = status == 'COM' ? '결제완료처리 하시겠습니까?' : '수강처리취소 하시겠습니까';
 
-                $('#dataLIst input[type=checkbox]').each(function(k, v) {
-                    $(this).prop('checked', checked);
-                });
-
-
-            });
-
-            $('#deleteButton').on('click', function() {
-
-                var $checked = $('#dataLIst input[type=checkbox]:checked');
-                if ($checked.length < 1) {
-                    alert(' 삭제할 데이터를 선택해 주세요. ');
+                if(!confirm(msg)){
                     return false;
                 }
 
-                if (!confirm(' 선택한 데이터를 삭제하시겠습니까? ')) {
-                    return false;
-                }
-
-                var idList = [];
-                $.each($checked, function(k, v) {
-                    idList.push($(this).val());
-                });
-
-                console.log(idList);
-                console.log(idList.join(','));
-
-                var $deleteForm = $('form[name=deleteForm]');
-                $deleteForm.find('input[name=idList]').val( idList.join(',') );
-                $deleteForm.submit();
+                // proForm데이터 가져오기
+                var $proForm = $('#proForm');
+                $proForm.find('input[name=id]').val(id);
+                $proForm.find('input[name=status]').val(status);
+                $proForm.submit();
 
             });
-
 
         });
     </script>
@@ -126,6 +111,9 @@
             <th>
                 상태
             </th>
+            <th>
+                비고
+            </th>
 
 
 
@@ -138,7 +126,7 @@
             </td>
             <td th:text="${x.seq}">1</td>
             <td>
-                <p th:text="${x.regDt}">2021.01.01</p>
+                <p th:text="${x.regDtText}">2021.01.01</p>
             </td>
             <td>
                 <p th:href="'edit?id=' + ${x.id}" th:text="${x.subject}">강좌명</p>
@@ -157,6 +145,13 @@
                 <p th:if="${x.status eq 'COM'}">결제완료</p>
                 <p th:if="${x.status eq 'CANCEL'}">수강취소</p>
             </td>
+            <td>
+                <div class="row-buttons" th:if="${x.status eq 'REQ'}">
+                    <input type="hidden" name="id" th:value="${x.id}">
+                    <button value="COM" type="button">결제완료 처리</button>
+                    <button value="CANCEL" type="button">수강취소 처리</button>
+                </div>
+            </td>
 
         </tr>
         </tbody>
@@ -170,8 +165,9 @@
 
 </div>
 
-<form name="deleteForm" method="post" action="/admin/course/delete">
-    <input type="hidden" name="idList"/>
+<form id="proForm" method="post" action="/admin/takecourse/status">
+    <input type="hidden" name="id"/>
+    <input type="hidden" name="status"/>
 </form>
 
 
