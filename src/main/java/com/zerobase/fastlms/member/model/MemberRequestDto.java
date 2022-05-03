@@ -10,4 +10,7 @@ public class MemberRequestDto {
     private String userName;
     private String phone;
     private String password;
+
+    // 추가
+    private String newPassword;
 }
