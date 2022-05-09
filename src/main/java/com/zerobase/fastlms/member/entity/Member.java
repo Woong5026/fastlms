@@ -19,6 +19,7 @@ public class Member implements MemberCode{
     private String phone;
     private String password;
     private LocalDateTime regDt;
+    private LocalDateTime uptDt;
 
     private boolean emailAuthYn;
     private String emailAuthKey;
@@ -36,20 +37,8 @@ public class Member implements MemberCode{
     // 이용가능한 상태 , 정지상태태
    private String userStatus;
 
+   private String zipcode;
+   private String addr;
+   private String addrDetail;
 
-    public Member(String userId, String userName, String phone, String password, LocalDateTime regDt) {
-        this.userId = userId;
-        this.userName = userName;
-        this.phone = phone;
-        this.password = password;
-        this.regDt = regDt;
-    }
-
-    public Member(MemberRequestDto requestDto){
-        this.userId = requestDto.getUserId();
-        this.password = requestDto.getPassword();
-        this.userName = requestDto.getUserName();
-        this.phone = requestDto.getPhone();
-        this.regDt = LocalDateTime.now();
-    }
 }

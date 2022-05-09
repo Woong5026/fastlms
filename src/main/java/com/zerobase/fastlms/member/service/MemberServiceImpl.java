@@ -249,6 +249,29 @@ public class MemberServiceImpl implements MemberService{
     }
 
     @Override
+    public ServiceResult updateMember(MemberRequestDto param) {
+
+        String userId = param.getUserId();
+
+        // 패스워드 일치확인
+        Optional<Member> optionalMember = memberRepository.findById(userId);
+        if(!optionalMember.isPresent()){
+            return new ServiceResult(false,"회원정보가 존재하지 않습니다");
+        }
+        Member member = optionalMember.get();
+
+        member.setPhone(param.getPhone());
+        member.setZipcode(param.getZipcode());
+        member.setAddr(param.getAddr());
+        member.setAddrDetail(param.getAddrDetail());
+        member.setUptDt(LocalDateTime.now());
+        memberRepository.save(member);
+
+        return new ServiceResult(true);
+
+    }
+
+    @Override
     public ServiceResult updateMemberPassword(MemberRequestDto param) {
 
         String userId = param.getUserId();

@@ -13,4 +13,8 @@ public class MemberRequestDto {
 
     // 추가
     private String newPassword;
+
+    private String zipcode;
+    private String addr;
+    private String addrDetail;
 }

@@ -35,6 +35,9 @@ public interface MemberService extends UserDetailsService {
    // 회원비밀번호 초기화
     boolean updatePassword(String userId, String password);
 
+    // 회원정보 수정
+    ServiceResult updateMember(MemberRequestDto param);
+
     // 회원정보 페이지 내 비밀번호 변경 기능
     ServiceResult updateMemberPassword(MemberRequestDto param);
 
