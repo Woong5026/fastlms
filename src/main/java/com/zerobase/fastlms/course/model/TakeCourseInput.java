@@ -12,5 +12,7 @@ public class TakeCourseInput {
 
     // courseId
     long courseId;
+    long takeCourseId;
+
     String userId;
 }

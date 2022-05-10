@@ -1,7 +1,9 @@
 package com.zerobase.fastlms.member.controller;
 
 import com.zerobase.fastlms.admin.dto.MemberDto;
+import com.zerobase.fastlms.course.dto.TakeCourseDto;
 import com.zerobase.fastlms.course.model.ServiceResult;
+import com.zerobase.fastlms.course.service.TakeCourseService;
 import com.zerobase.fastlms.member.entity.Member;
 import com.zerobase.fastlms.member.model.MemberRequestDto;
 import com.zerobase.fastlms.member.model.ResetPasswordRequestDto;
@@ -20,12 +22,14 @@ import javax.persistence.EntityManager;
 import javax.servlet.http.HttpServletRequest;
 import java.security.Principal;
 import java.time.LocalDateTime;
+import java.util.List;
 
 @Controller
 @RequiredArgsConstructor
 public class MemberController {
 
     private final MemberService memberService;
+    private final TakeCourseService takeCourseService;
 
 
     @RequestMapping("/member/login")
@@ -171,9 +175,10 @@ public class MemberController {
     public String memberTakeCourse(Model model, Principal principal){
 
         String userId = principal.getName();
-        MemberDto detail = memberService.detail(userId);
 
-        model.addAttribute("detail", detail);
+        List<TakeCourseDto> list =takeCourseService.myCourse(userId);
+
+        model.addAttribute("list", list);
 
         return "member/takecourse";
     }
