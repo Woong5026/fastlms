@@ -6,6 +6,11 @@
 
 <!--    공통인 부분 처리, 중복 쿼리를 줄이기 위해 사용-->
     <sql id="selectListWhere">
+
+        <if test="searchCourseId > 0">
+            and c.id = #{searchCourseId}
+        </if>
+
     </sql>
 
 
@@ -13,7 +18,9 @@
             parameterType="com.zerobase.fastlms.course.model.TakeCourseParam"
             resultType="long">
         select count(*)
-        from take_course
+        from take_course tc
+        join course c on tc.course_id = c.id
+        join member m on tc.user_id = m.user_id
         where 1 = 1
             <include refid="selectListWhere" />
     </select>

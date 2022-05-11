@@ -27,4 +27,7 @@ public interface CourseService {
 
    // 수강신청
    ServiceResult request(TakeCourseInput param);
+
+   // 전체 강좌정보 목록
+    List<CourseDto> listAll();
 }

@@ -57,6 +57,12 @@
     <script>
         $(document).ready(function() {
 
+            $("#searchCourseId").on('change', function (){
+                var id = $(this).val();
+                location.href = '?searchCourseId=' + id;
+            });
+
+
             // 여기서의 button은 수강완료가 될수도 있고 수강취소가 될 수도 있다
             $('.row-buttons button').on('click', function (){
 
@@ -75,7 +81,6 @@
                 $proForm.find('input[name=id]').val(id);
                 $proForm.find('input[name=status]').val(status);
                 $proForm.submit();
-
             });
 
         });
@@ -86,12 +91,14 @@
 <!--<div th:replace="/fragments/layout.html :: fragment-admin-body-menu"></div>-->
 
 <div class="list">
-
     <div class="buttons">
 
-        <select>
+        <select id="searchCourseId">
             <option value="">전체 강좌</option>
-            <option value="">자바 프로그래밍밍</optio>
+            <option th:each="x : ${courseAllList}"
+                    th:selected="${#strings.equals(param.searchCourseId, x.id)}"
+                    th:value="${x.id}"
+                    th:text="${x.subject}">자바 프로그래밍밍</option>
         </select>
 
         <p class="total-count">전체 <span th:text="${totalCount}"></span>개</p>

@@ -7,6 +7,7 @@ import com.zerobase.fastlms.course.model.*;
 import com.zerobase.fastlms.course.service.CourseService;
 import com.zerobase.fastlms.course.service.TakeCourseService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.boot.context.properties.bind.BindResult;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -19,10 +20,11 @@ import java.util.List;
 @Controller
 public class AdminTakeCourseController extends BaseController{
 
+    private final CourseService courseService;
     private final TakeCourseService takeCourseService;
 
     @GetMapping("/admin/takecourse/list")
-    public String list(Model model, TakeCourseParam param){
+    public String list(Model model, TakeCourseParam param, BindResult bindResult){
 
         param.init();
 
@@ -40,6 +42,9 @@ public class AdminTakeCourseController extends BaseController{
         model.addAttribute("list", courseList);
         model.addAttribute("pager", pagerHtml);
         model.addAttribute("totalCount", totalCount);
+
+        List<CourseDto> courseAllList = courseService.listAll();
+        model.addAttribute("courseAllList", courseAllList);
 
         return "admin/takecourse/list";
     }
